@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScanningActivity" />
+        <activity android:name=".ScanningActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".PrefActivity"/>
     </application>
 
 </manifest>

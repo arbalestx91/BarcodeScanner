@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">BarcodeScanner</string>
     <string name="action_settings">Settings</string>
+
+    <!-- activity_scanning -->
+    <string name="action_pref">Preferences</string>
 </resources>
