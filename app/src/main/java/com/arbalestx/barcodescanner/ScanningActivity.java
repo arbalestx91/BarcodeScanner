@@ -15,14 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScanningActivity extends AppCompatActivity {
 
-    private ArrayList<String> listItems = new ArrayList<String>();
+    private ArrayList<String> listInventory = new ArrayList<String>();
     private ArrayAdapter<String> adapter;
-    private ListView listBarcode;
-    private EditText editBarcode;
-    private TextView textUndo;
+    private ListView listViewBarcode;
+    private EditText editTextBarcode;
+    private TextView textViewUndo;
     private View viewContainer;
 
     @Override
@@ -31,27 +32,27 @@ public class ScanningActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_scanning);
 
-        editBarcode = (EditText) findViewById(R.id.editBarcode);
-        listBarcode = (ListView) findViewById(android.R.id.list);
+        editTextBarcode = (EditText) findViewById(R.id.editBarcode);
+        listViewBarcode = (ListView) findViewById(android.R.id.list);
         viewContainer = findViewById(R.id.undobar);
-        textUndo = (TextView) findViewById(R.id.textUndo);
+        textViewUndo = (TextView) findViewById(R.id.textUndo);
 
-        editBarcode.setOnKeyListener(new View.OnKeyListener() {
+        editTextBarcode.setOnKeyListener(new View.OnKeyListener() {
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 addItems();
                 return true;
             }
-                return false;
+            return false;
             }
         });
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        listBarcode.setAdapter(adapter);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listInventory);
+        listViewBarcode.setAdapter(adapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_scan, menu);
         return true;
     }
 
@@ -59,24 +60,36 @@ public class ScanningActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_pref) {
-            Intent i = new Intent(this, PrefActivity.class);
-            startActivity(i);
-            return true;
+        if (id == R.id.action_exportCSV) {
+            ArrayList<String> listItem = new ArrayList<>();
+            ArrayList<Integer> listQty = new ArrayList<>();
+            int index = 0;
+
+            for(String invItem:listInventory) {
+                if(listItem.contains(invItem)) {
+                    index = listItem.indexOf(invItem);
+                    listQty.set(index, listQty.get(index) + 1);
+                }
+                else {
+                    listItem.add(invItem);
+                    listQty.add(1);
+                }
+            }
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public void addItems() {
-        listItems.add(editBarcode.getText().toString());
+        listInventory.add(editTextBarcode.getText().toString());
         showUndoBar(viewContainer);
         adapter.notifyDataSetChanged();
-        editBarcode.setText("");
+        editTextBarcode.setText("");
     }
 
     public void showUndoBar(final View viewContainer) {
-        textUndo.setText(editBarcode.getText().toString());
+        textViewUndo.setText(editTextBarcode.getText().toString());
         viewContainer.setVisibility(View.VISIBLE);
         viewContainer.setAlpha(1);
         viewContainer.animate().alpha(0.4f).setDuration(3000).withEndAction(new Runnable() {
@@ -88,7 +101,7 @@ public class ScanningActivity extends AppCompatActivity {
     }
 
     public void clickUndo(View view) {
-        listItems.remove(listItems.size()-1);
+        listInventory.remove(listInventory.size()-1);
         Toast.makeText(this, "Done", Toast.LENGTH_LONG).show();
         viewContainer.setVisibility(View.GONE);
     }

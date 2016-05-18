@@ -4,4 +4,5 @@
 
     <!-- activity_scanning -->
     <string name="action_pref">Preferences</string>
+    <string name="action_exportCSV">Export CSV</string>
 </resources>
